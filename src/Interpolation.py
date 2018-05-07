@@ -104,13 +104,13 @@ for i in range(0, xQueries.__len__(), 1):
     yQueries.append(getInterpolationValue(xQueries[i], x))
 #===========================================================plotting all================================
 fig, ax = plt.subplots()
-ax.plot(xT, yT)
+ax.plot(xT, yT,'gold')
 ax.plot(x, y, 'ro')
 ax.plot(xQueries, yQueries, 'k*')
 
 for i in range(0, xQueries.__len__(), 1):
     bbox_props = dict(boxstyle="round", fc="cyan", alpha=.1)
-    ax.text(xQueries[i], yQueries[i] + .2 * (max(y) - min(y)), r"(" + str(xQueries[i]) + ", " + str(yQueries[i].__format__(".2f")) + ")", horizontalalignment='center', verticalalignment='center', fontsize=7, color="black", bbox=bbox_props)
+    ax.text(xQueries[i], yQueries[i], "\n(" + str(xQueries[i]) + ", " + str(yQueries[i].__format__(".2f")) + ")", horizontalalignment='center', verticalalignment='top', fontsize=7, color="black", bbox=bbox_props)
 
 ax.text((min(x) + max(x)) / 2, min(yT), "P(x) = " + str(poly)[5:-17], horizontalalignment='center', verticalalignment='top', fontsize=10, color="blue")
 ax.text((min(x) + max(x)) / 2, max(yT), "Newton", horizontalalignment='center', verticalalignment='bottom', fontsize=15, color="blue")
