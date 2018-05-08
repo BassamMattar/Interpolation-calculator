@@ -82,12 +82,18 @@ poly = Poly(r, sym)
 
 coef = []
 for i in poly.coeffs():
-    prec = math.log(math.fabs(i))
+    prec = math.log10(math.fabs(i))
     if prec > 0:
         coef.append(i.__format__(".2f"))
     else :
         coef.append(i.__format__("." + str(int(math.fabs(prec)) + 1) + "f"))
-        
+tDif = []
+for i in dif:
+    prec = math.log10(math.fabs(i))
+    if prec > 0:
+        tDif.append(i.__format__(".2f"))
+    else :
+        tDif.append(i.__format__("." + str(int(math.fabs(prec)) + 1) + "f"))        
 poly = Poly(coef, sym)
 
 step = .00001 * (x[len(x) - 1] - x[0])
@@ -112,7 +118,7 @@ for i in range(0, xQueries.__len__(), 1):
     bbox_props = dict(boxstyle="round", fc="cyan", alpha=.1)
     ax.text(xQueries[i], yQueries[i], "\n(" + str(xQueries[i]) + ", " + str(yQueries[i].__format__(".2f")) + ")", horizontalalignment='center', verticalalignment='top', fontsize=7, color="black", bbox=bbox_props)
 
-ax.text((min(x) + max(x)) / 2, min(yT), "P(x) = " + str(poly)[5:-17], horizontalalignment='center', verticalalignment='top', fontsize=10, color="blue")
+ax.text((min(x) + max(x)) / 2, min(yT), "P(x) = " + str(poly)[5:-17] + "\nDivided Differences: "+ str(tDif), horizontalalignment='center', verticalalignment='top', fontsize=10, color="blue")
 ax.text((min(x) + max(x)) / 2, max(yT), "Newton", horizontalalignment='center', verticalalignment='bottom', fontsize=15, color="blue")
 
 plt.xlabel("x")

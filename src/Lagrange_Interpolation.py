@@ -37,7 +37,14 @@ def getValueOfMultiplyingOuts(x=[0.0], y=[0.0], i=0.0):
         result *= (value - x[j]) / (x[i] - x[j])
     return result
 
-
+def getValueOfLagrange(x=[0.0], i=0.0):
+    result = 1
+    value = Symbol('x')
+    for j in range(0, len(y), 1):
+        if j is i:
+            continue
+        result *= (value - x[j]) / (x[i] - x[j])
+    return result
 startTime = time.time()
 xT = []
 yT = []
@@ -47,12 +54,25 @@ xQueries = [1.5, 2.5, 3.5]
 yQueries = []
 
 sym = Symbol('x')
-r = getFunction(x, y)
-poly = Poly(r, sym)
-
+p = getFunction(x, y)
+poly = Poly(p, sym)
+ls = []
+for i in range(0,len(y),1):
+    l = getValueOfLagrange(x, i)
+    lPoly = Poly(l, sym)
+    cLpoly = []
+    for j in lPoly.coeffs():
+        prec = math.log10(math.fabs(j))
+        if prec > 0:
+            cLpoly.append(float(j).__format__(".2f"))
+        else :
+            cLpoly.append(float(j).__format__("." + str(int(math.fabs(prec)) + 1) + "f"))
+    ls.append("L"+str(i)+"(x)= "+str(Poly(cLpoly,sym))[5:-17])
+print(ls)
+    
 coef = []
 for i in poly.coeffs():
-    prec = math.log(math.fabs(i))
+    prec = math.log10(math.fabs(i))
     if prec > 0:
         coef.append(i.__format__(".2f"))
     else :
