@@ -3,6 +3,7 @@ from sympy import Poly
 import matplotlib.pyplot as plt
 import time
 import math
+
 class MyClass(object):
     y = []
     x = []
@@ -22,9 +23,8 @@ class MyClass(object):
     polynomialFunction = 0;
     
     lagranges = []
-    fig, ax = plt.subplots()
+    ax = 0
     def __init__(self, newX = [], newY = [], newXQueries = [],newMethod = 0):
-        self.exeTime = time.time()
         self.x = newX
         self.y = newY
         self.xQueries = newXQueries
@@ -37,6 +37,8 @@ class MyClass(object):
             
     
     def interpolate(self):
+        self.exeTime = time.time()
+        fig, self.ax = plt.subplots()
         tempSym = Symbol('x')
         tempFuncSymbol = self.getFunction(self.x,self.y);
         self.polynomialFunction = Poly(tempFuncSymbol, tempSym)
@@ -53,7 +55,8 @@ class MyClass(object):
         else:
             for i in range(0, len(self.newton_Differences), 1):
                 result += self.getProperFactor(self.newton_Differences[i], i, value, x)
-        return result;   
+        return result;
+       
     def getNewtonDifferences(self,x=[0.0], y=[0.0]):
         it = int((len(y) * (len(y) - 1)) / 2)
         length = len(y)
@@ -182,10 +185,12 @@ class MyClass(object):
             self.getAllLagranges()
             print(self.lagranges)
             self.ax.text((min(self.x) + max(self.x)) / 2, max(self.yCurve), "Lagrange", horizontalalignment='center', verticalalignment='bottom', fontsize=15, color="blue")
+            plt.title('Interpolation Plot Fig - Lagrange')
         else:
-            self.newton_Differences = self.getProberFormat(self.newton_Differences);
-            self.ax.text((min(self.x) + max(self.x)) / 2, min(self.yCurve), "\nDivided Differences: "+ str(self.newton_Differences), horizontalalignment='center', verticalalignment='top', fontsize=10, color="blue")
+            tempDiff = self.getProberFormat(self.newton_Differences);
+            self.ax.text((min(self.x) + max(self.x)) / 2, min(self.yCurve), "\nDivided Differences: "+ str(tempDiff), horizontalalignment='center', verticalalignment='top', fontsize=10, color="blue")
             self.ax.text((min(self.x) + max(self.x)) / 2, max(self.yCurve), "Newton", horizontalalignment='center', verticalalignment='bottom', fontsize=15, color="blue")
+            plt.title('Interpolation Plot Fig - Newton')
             
         self.exeTime = time.time() - self.exeTime
         print("Execution Time: " + str(self.exeTime) + " S")
