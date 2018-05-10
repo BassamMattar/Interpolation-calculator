@@ -29,10 +29,11 @@ class MyClass(object):
         self.y = newY
         self.xQueries = newXQueries
         self.method = newMethod
-        if self.method == 1:
-            self.newton_Differences = self.getNewtonDifferences(self.x, self.y.copy())
-        else:
+        if self.method == 2:
             print("Lagarange");
+        else:
+            self.newton_Differences = self.getNewtonDifferences(self.x, self.y.copy())
+            
             
     
     def interpolate(self):
