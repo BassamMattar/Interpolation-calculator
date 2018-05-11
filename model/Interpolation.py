@@ -31,7 +31,9 @@ class MyClass(object):
         self.y = newY
         self.xQueries = newXQueries
         self.method = newMethod
-        if self.method == 2:
+        if self.method == 0:
+            print("default")
+        elif self.method == 2:
             print("Lagarange");
         else:
             self.newton_Differences = self.getNewtonDifferences(self.x, copy.deepcopy(self.y))
@@ -193,8 +195,7 @@ class MyClass(object):
            # self.ax.text((min(self.x) + max(self.x)) / 2, min(self.yCurve), "\nDivided Differences: "+ str(tempDiff), horizontalalignment='center', verticalalignment='top', fontsize=10, color="blue")
             plt.title('Newton')
             plt.figure(1).canvas.set_window_title("Interpolation fig - Newton")
-            
-            
+
         self.exeTime = time.time() - self.exeTime
         print("Execution Time: " + str(self.exeTime) + " S")
         plt.xlabel("x")
@@ -206,7 +207,15 @@ class MyClass(object):
     
     def getLag(self):
         return self.lagranges
+
     def getTime(self):
         return self.exeTime
+
     def showplt(self):
         plt.show()
+
+    def getFunc(self):
+        return self.polynomialFunction
+
+    def getQueryResult(self):
+        return self.xQueries,self.yQueries

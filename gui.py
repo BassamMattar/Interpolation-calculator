@@ -8,20 +8,24 @@ def styleButton(btn):
     app.setButtonCursor(btn,"hand2")
     app.setButtonRelief(btn,"groove")
 
-def generatePlot():
-    print("generate plot")
+
 
 def addSamplePoint():
     global samplePointsTable
     x = app.getEntry("x =")
     y = app.getEntry("y =")
-    if(x == None or y == None):
+    if x == None or y == None:
         app.errorBox("Empty Sample Point", "Please enter sample point")
-    else:
-        newPoint = [x,y]
-        if newPoint in samplePointsTable:
-            app.errorBox("Duplicate Sample Point","you can't enter duplicate sample point")
+    else :
+        duplicateX = False
+        for point in samplePointsTable:
+            if x == point[0]:
+                duplicateX = True
+                break
+        if duplicateX:
+            app.errorBox("Duplicate Sample Point", "you can't enter duplicate sample point")
         else:
+            newPoint = [x,y]
             samplePointsTable.append(newPoint)
             app.addTableRow("samplePointsTable",newPoint)
             print("add sample point")
@@ -43,7 +47,24 @@ def addQuery():
 def readFile():
     print("read from file")
 
+def generatePlot():
+    if generalInterpolation.method == 0:
+        app.errorBox("Plotting without interpolation","you must ruuning interpolation fisrt")
+    else:
+        generalInterpolation.showplt()
+        print("plot")
 
+def fillQueriesResultTable(xQueries, yQueries):
+    data = []
+    for x in xQueries:
+        data.append([x])
+    for i in range(0,len(yQueries),1):
+        data[i].append(yQueries[i])
+    app.deleteAllTableRows("queriesResultTable")
+    app.addTableRows("queriesResultTable",data)
+    print("fill queries result table")
+
+generalInterpolation = Interpolation.MyClass()
 def interpolate():
     xQueries = []
     xPoints = []
@@ -54,17 +75,28 @@ def interpolate():
     for query in queriesTable:
         xQueries.append(float(query[0]))
     polyOrder = app.getEntry("Polynomial Order")
-    method = app.getOptionBox("Method")
-    print(xPoints,yPoints,xQueries,polyOrder,method)    #debugging
-    generalInterpolation = Interpolation.MyClass(newX=xPoints, newY=yPoints, newXQueries=xQueries, newMethod=method)
-    generalInterpolation.interpolate()
+    if not xPoints or not yPoints or not xQueries:
+        app.errorBox("Empty data","Please, fill the required entries first")
+    elif len(xPoints) == 1:
+        app.errorBox("Required sample points", "you must enter at least 2 sample points")
+    elif polyOrder == None:
+        app.errorBox("Empty polynomial order","Please, specifiy the polynomial order")
+    else:
+        method = app.getOptionBox("Method")
+        methodNum = 1 if method == "Newton" else 2
+        print(xPoints,yPoints,xQueries,polyOrder,method,str(methodNum))    #debugging
+        global generalInterpolation
+        generalInterpolation = Interpolation.MyClass(newX=xPoints, newY=yPoints, newXQueries=xQueries, newMethod=methodNum)
+        generalInterpolation.interpolate()
+        app.setMessage("function","P(x) = " + str(generalInterpolation.getFunc()))
+        app.setMessage("time","execution time = " + str(generalInterpolation.getTime()) + " s")
+        fillQueriesResultTable(*generalInterpolation.getQueryResult())
+        if method == "Newton":
+            app.setMessage("details",generalInterpolation.getDif())
+        elif method == "Lagrange":
+            app.setMessage("details", generalInterpolation.getLag())
 
-    if method=="Newton":
-        print(generalInterpolation.getNewtonDifferences())
-    elif method =="Lagrange":
-        print(generalInterpolation.getAllLagranges())
-    generalInterpolation.plot()
-    print(generalInterpolation.getFunction())
+
 
 
 
@@ -84,7 +116,9 @@ def deleteSamplePoint(rowNumber):
 samplePointsTable = []
 queriesTable = []
 # setup GUI
-app = gui("Interpolation Calculator")
+app = gui("Interpolation Calculator",showIcon=True)
+app.setResizable(False)
+#app.setIcon("logo.ico")
 app.setBg("#e2edff",override=True)
 app.setFont(family="inherit")
 app.setSticky("nesw")
@@ -99,6 +133,7 @@ app.addButton("add point",addSamplePoint,0,2)
 styleButton("add point")
 app.addTable("samplePointsTable",
     [["x", "y"]],1,colspan=3,action=deleteSamplePoint,actionButton="delete",border="sunken")
+app.setTableHeight("samplePointsTable", 200)
 app.stopLabelFrame()
 
 app.startLabelFrame("Queries",0,1)
@@ -108,6 +143,7 @@ app.addButton("add query",addQuery,0,1)
 styleButton("add query")
 app.addTable("queriesTable",
              [["x"]],1,colspan=3,action=deleteQuery,actionButton="delete query",border="sunken")
+app.setTableHeight("queriesTable", 200)
 app.stopLabelFrame()
 
 app.startLabelFrame("Interploation Method",1,0)
@@ -118,23 +154,27 @@ app.addLabel("Or")
 app.addFileEntry("file",4,0)
 app.addButton("load",readFile,4,1)
 styleButton("load")
-app.addButton("Interploate",interpolate)
+app.addButton("Interploate",interpolate,5,0)
 styleButton("Interploate")
+app.addButton("generate plot",generatePlot,5,1)
+styleButton("generate plot")
 app.stopLabelFrame()
 
 app.startLabelFrame("Interploation Result",1,1)
+app.startScrollPane("resultPane")
 app.setPadding([10,5])
-app.addLabel("plot","Plot will be here",0,0)
-app.addMessage("result", """You can put a lot of text in this widget.
-The text will be wrapped over multiple lines.
-It's not possible to apply different styles to different words.""")
-app.addButton("generate plot",generatePlot)
-styleButton("generate plot")
+app.addMessage("function","P(x) = ?")
+app.setMessageBg("function","light blue")
+app.setMessageWidth("function",350)
+app.addMessage("time","execution time = ?")
+app.setMessageBg("time","light blue")
+app.setMessageWidth("time",350)
+app.addMessage("details", "Interpolation Method details will be here.")
+app.setMessageWidth("details",350)
 app.addTable("queriesResultTable",
-    [["x (query)", "y"],
-    [2, 45],
-    [3, 37],
-    [4, 28],
-    [5, 51]],0,1,rowspan=3)
+    [["x (query)", "y"]],border="sunken")
+app.setScrollPaneWidth("resultPane", 400)
+
+app.stopScrollPane()
 app.stopLabelFrame()
 app.go()
