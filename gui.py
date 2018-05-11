@@ -12,18 +12,30 @@ def addSamplePoint():
     global samplePointsTable
     x = app.getEntry("x =")
     y = app.getEntry("y =")
-    newPoint = [x,y]
-    samplePointsTable.append(newPoint)
-    app.addTableRow("samplePointsTable",newPoint)
-    print("add sample point")
+    if(x == None or y == None):
+        app.errorBox("Empty Sample Point", "Please enter sample point")
+    else:
+        newPoint = [x,y]
+        if newPoint in samplePointsTable:
+            app.errorBox("Duplicate Sample Point","you can't enter duplicate sample point")
+        else:
+            samplePointsTable.append(newPoint)
+            app.addTableRow("samplePointsTable",newPoint)
+            print("add sample point")
 
 def addQuery():
     global queriesTable
     xQuery = app.getEntry("x (query) =")
-    newQuery = [xQuery]
-    queriesTable.append(newQuery)
-    app.addTableRow("queriesTable",newQuery)
-    print("add Query")
+    if(xQuery == None):
+        app.errorBox("Empty Query","Please enter query point")
+    else:
+        newQuery = [xQuery]
+        if newQuery in queriesTable:
+            app.errorBox("Duplicate Query","you can't enter duplicate query")
+        else:
+            queriesTable.append(newQuery)
+            app.addTableRow("queriesTable",newQuery)
+            print("add Query")
 
 def readFile():
     print("read from file")
