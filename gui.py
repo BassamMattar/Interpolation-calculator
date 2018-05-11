@@ -1,6 +1,5 @@
 from appJar import gui
-from model import Interpolation
-
+from model import Interpolation, FileReader
 
 def styleButton(btn):
     app.setButtonBg(btn, "#337ab7")
@@ -45,6 +44,28 @@ def addQuery():
             print("add Query")
 
 def readFile():
+    filePath = app.getEntry("file")
+    reader = FileReader.MyClass(filePath)
+    methodNumber,polyOrder,xPoints,yPoints,xQueries = reader.getResult()
+    app.setOptionBox("Method",methodNumber-1)
+    app.setEntry("Polynomial Order",polyOrder)
+
+    global samplePointsTable
+    samplePointsTable = []
+    for x in xPoints:
+        samplePointsTable.append([x])
+    for i in range(0, len(yPoints), 1):
+        samplePointsTable[i].append(yPoints[i])
+    app.deleteAllTableRows("samplePointsTable")
+    app.addTableRows("samplePointsTable", samplePointsTable)
+
+    global queriesTable
+    queriesTable = []
+    for x in xQueries:
+        queriesTable.append([x])
+    app.deleteAllTableRows("queriesTable")
+    app.addTableRows("queriesTable", queriesTable)
+
     print("read from file")
 
 def generatePlot():
