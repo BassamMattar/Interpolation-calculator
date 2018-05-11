@@ -81,6 +81,8 @@ def interpolate():
         app.errorBox("Required sample points", "you must enter at least 2 sample points")
     elif polyOrder == None:
         app.errorBox("Empty polynomial order","Please, specifiy the polynomial order")
+    elif not(polyOrder < len(xPoints)):
+        app.errorBox("Invalid polynomial order", "Polynomial order must be less than number of sample points")
     else:
         method = app.getOptionBox("Method")
         methodNum = 1 if method == "Newton" else 2
@@ -95,11 +97,6 @@ def interpolate():
             app.setMessage("details",generalInterpolation.getDif())
         elif method == "Lagrange":
             app.setMessage("details", generalInterpolation.getLag())
-
-
-
-
-
 
 def deleteQuery(rowNumber):
     print(rowNumber)
