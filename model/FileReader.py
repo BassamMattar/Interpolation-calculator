@@ -43,4 +43,4 @@ class MyClass(object):
         
         for i in array:
             self.xQueries.append(float(i))
-        return self.method,self.x,self.y,self.xQueries
+        return self.method,self.nPoints,self.x,self.y,self.xQueries
