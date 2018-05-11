@@ -90,7 +90,7 @@ def interpolate():
         global generalInterpolation
         generalInterpolation = Interpolation.MyClass(newX=xPoints, newY=yPoints, newXQueries=xQueries, newMethod=methodNum)
         generalInterpolation.interpolate()
-        app.setMessage("function","P(x) = " + str(generalInterpolation.getFunc()))
+        app.setMessage("function","P(x) = " + str(generalInterpolation.getFunc())[5:-17])
         app.setMessage("time","execution time = " + str(generalInterpolation.getTime()) + " s")
         fillQueriesResultTable(*generalInterpolation.getQueryResult())
         if method == "Newton":
