@@ -117,6 +117,9 @@ class MyClass(object):
     def getProberFormat(self, array=[]):
         formatedArray = []
         for i in array:
+            if i == 0:
+                formatedArray.append(i);
+                continue;
             prec = math.log10(math.fabs(i))
             if prec > 0:
                 formatedArray.append(float(i).__format__(".2f"))
