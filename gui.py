@@ -8,6 +8,9 @@ def styleButton(btn):
     app.setButtonCursor(btn,"hand2")
     app.setButtonRelief(btn,"groove")
 
+def generatePlot():
+    print("generate plot")
+
 def addSamplePoint():
     global samplePointsTable
     x = app.getEntry("x =")
@@ -56,6 +59,15 @@ def interpolate():
     generalInterpolation = Interpolation.MyClass(newX=xPoints, newY=yPoints, newXQueries=xQueries, newMethod=method)
     generalInterpolation.interpolate()
 
+    if method=="Newton":
+        print(generalInterpolation.getNewtonDifferences())
+    elif method =="Lagrange":
+        print(generalInterpolation.getAllLagranges())
+    generalInterpolation.plot()
+    print(generalInterpolation.getFunction())
+
+
+
 
 def deleteQuery(rowNumber):
     print(rowNumber)
@@ -98,10 +110,10 @@ app.addTable("queriesTable",
              [["x"]],1,colspan=3,action=deleteQuery,actionButton="delete query",border="sunken")
 app.stopLabelFrame()
 
-app.startLabelFrame("Interploation Method",0,2)
+app.startLabelFrame("Interploation Method",1,0)
 app.setPadding([10,5])
-app.addLabelNumericEntry("Polynomial Order",colspan=2)
-app.addLabelOptionBox("Method", ["Newton","Lagrange"],colspan=2)
+app.addLabelNumericEntry("Polynomial Order",colspan=3)
+app.addLabelOptionBox("Method", ["Newton","Lagrange"],colspan=3)
 app.addLabel("Or")
 app.addFileEntry("file",4,0)
 app.addButton("load",readFile,4,1)
@@ -110,16 +122,19 @@ app.addButton("Interploate",interpolate)
 styleButton("Interploate")
 app.stopLabelFrame()
 
-app.startLabelFrame("Interploation Result",1,0,colspan=3)
+app.startLabelFrame("Interploation Result",1,1)
+app.setPadding([10,5])
 app.addLabel("plot","Plot will be here",0,0)
 app.addMessage("result", """You can put a lot of text in this widget.
 The text will be wrapped over multiple lines.
-It's not possible to apply different styles to different words.""",0,1)
+It's not possible to apply different styles to different words.""")
+app.addButton("generate plot",generatePlot)
+styleButton("generate plot")
 app.addTable("queriesResultTable",
-    [["x", "y"],
+    [["x (query)", "y"],
     [2, 45],
     [3, 37],
     [4, 28],
-    [5, 51]],0,2)
+    [5, 51]],0,1,rowspan=3)
 app.stopLabelFrame()
 app.go()
