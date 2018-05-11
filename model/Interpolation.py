@@ -186,7 +186,7 @@ class MyClass(object):
         for i in range(0, self.xQueries.__len__(), 1):
             self.ax.text(self.xQueries[i], self.yQueries[i], "\n(" + str(self.xQueries[i]) + ", " + str(self.yQueries[i].__format__(".2f")) + ")", horizontalalignment='center', verticalalignment='top', fontsize=7, color="black", bbox=bbox_props)
       
-        self.ax.text((min(self.x) + max(self.x)) / 2, min(self.yCurve), "P(x) = " + str(self.polynomialFunction)[5:-17], horizontalalignment='center', verticalalignment='top', fontsize=10, color="blue")
+        #self.ax.text((min(self.x) + max(self.x)) / 2, min(self.yCurve), "P(x) = " + str(self.polynomialFunction)[5:-17], horizontalalignment='center', verticalalignment='top', fontsize=10, color="blue")
         
         if self.method == 2:
             self.getAllLagranges()
