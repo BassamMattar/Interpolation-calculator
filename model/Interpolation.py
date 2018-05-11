@@ -185,12 +185,12 @@ class MyClass(object):
         
         if self.method == 2:
             self.getAllLagranges()
-            print(self.lagranges)
+            #print(self.lagranges)
             plt.title('Lagrange')
             plt.figure(1).canvas.set_window_title('Interpolation fig - Lagrange')
         else:
             tempDiff = self.getProberFormat(self.newton_Differences);
-            self.ax.text((min(self.x) + max(self.x)) / 2, min(self.yCurve), "\nDivided Differences: "+ str(tempDiff), horizontalalignment='center', verticalalignment='top', fontsize=10, color="blue")
+           # self.ax.text((min(self.x) + max(self.x)) / 2, min(self.yCurve), "\nDivided Differences: "+ str(tempDiff), horizontalalignment='center', verticalalignment='top', fontsize=10, color="blue")
             plt.title('Newton')
             plt.figure(1).canvas.set_window_title("Interpolation fig - Newton")
             
@@ -199,6 +199,14 @@ class MyClass(object):
         print("Execution Time: " + str(self.exeTime) + " S")
         plt.xlabel("x")
         plt.ylabel("f(x)") 
+        #plt.show()
+        
+    def getDif(self):
+        return self.newton_Differences
+    
+    def getLag(self):
+        return self.lagranges
+    def getTime(self):
+        return self.exeTime
+    def showplt(self):
         plt.show()
-        
-        
