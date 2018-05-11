@@ -1,4 +1,6 @@
 from appJar import gui
+from model import Interpolation
+
 
 def styleButton(btn):
     app.setButtonBg(btn, "#337ab7")
@@ -26,21 +28,39 @@ def addQuery():
 def readFile():
     print("read from file")
 
-def interpolate():
-    print("interploate")
 
-def deleteQuery(rowNumer):
-    queriesTable.remove(float(rowNumer)+1)
+def interpolate():
+    xQueries = []
+    xPoints = []
+    yPoints = []
+    for samplePoint in samplePointsTable:
+        xPoints.append(float(samplePoint[0]))
+        yPoints.append(float(samplePoint[1]))
+    for query in queriesTable:
+        xQueries.append(float(query[0]))
+    polyOrder = app.getEntry("Polynomial Order")
+    method = app.getOptionBox("Method")
+    print(xPoints,yPoints,xQueries,polyOrder,method)    #debugging
+    generalInterpolation = Interpolation.MyClass(newX=xPoints, newY=yPoints, newXQueries=xQueries, newMethod=method)
+    generalInterpolation.interpolate()
+
+
+def deleteQuery(rowNumber):
+    print(rowNumber)
+    del queriesTable[rowNumber]
     app.deleteAllTableRows("queriesTable")
     app.addTableRows("queriesTable",queriesTable)
 
-def deleteSamplePoint(rowNumer):
-    app.deleteTableRow("samplePointsTable", rowNumer)
+def deleteSamplePoint(rowNumber):
+    print(rowNumber)
+    del samplePointsTable[rowNumber]
+    app.deleteAllTableRows("samplePointsTable")
+    app.addTableRows("samplePointsTable",samplePointsTable)
 
-samplePointsTable = [["x", "y"]]
-queriesTable = [["x"]]
+samplePointsTable = []
+queriesTable = []
 # setup GUI
-app = gui("Root Finder")
+app = gui("Interpolation Calculator")
 app.setBg("#e2edff",override=True)
 app.setFont(family="inherit")
 app.setSticky("nesw")
@@ -63,7 +83,7 @@ app.addLabelNumericEntry("x (query) =",0,0)
 app.addButton("add query",addQuery,0,1)
 styleButton("add query")
 app.addTable("queriesTable",
-             queriesTable,1,colspan=3,action=deleteQuery,actionButton="delete query",border="sunken")
+             [["x"]],1,colspan=3,action=deleteQuery,actionButton="delete query",border="sunken")
 app.stopLabelFrame()
 
 app.startLabelFrame("Interploation Method",0,2)
